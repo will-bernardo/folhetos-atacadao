@@ -1,42 +1,10 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-
-interface HeaderProps {
-  defaultImage?: string;
+interface HeaderConfig {
+  header: {
+    imagem: string;
+  };
 }
 
-export default function Header({ defaultImage = '' }: HeaderProps) {
-  const [imageUrl, setImageUrl] = useState(defaultImage);
-
-  useEffect(() => {
-    async function fetchConfig() {
-      try {
-        const res = await fetch('/api/config');
-        if (res.ok) {
-          const data = await res.json();
-          if (data.header?.imagem) {
-            setImageUrl(data.header.imagem);
-          }
-        }
-      } catch {
-      }
-    }
-    fetchConfig();
-  }, []);
-
-  if (imageUrl) {
-    return (
-      <header className="bg-white shadow-md sticky top-0 z-10 overflow-hidden">
-        <img
-          src={imageUrl}
-          alt="Header"
-          className="w-full h-24 sm:h-32 object-cover"
-        />
-      </header>
-    );
-  }
-
+function HeaderDefault() {
   return (
     <header className="bg-red-600 text-white shadow-lg sticky top-0 z-10">
       <div className="container mx-auto px-4 py-4">
@@ -56,6 +24,37 @@ export default function Header({ defaultImage = '' }: HeaderProps) {
           </div>
         </div>
       </div>
+    </header>
+  );
+}
+
+async function getHeaderConfig(): Promise<HeaderConfig> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const res = await fetch(`${baseUrl}/config.json`, { cache: 'no-store' });
+    if (res.ok) {
+      return res.json();
+    }
+  } catch {
+  }
+  return { header: { imagem: '' } };
+}
+
+export default async function Header() {
+  const config = await getHeaderConfig();
+  const imageUrl = config.header?.imagem;
+
+  if (!imageUrl) {
+    return <HeaderDefault />;
+  }
+
+  return (
+    <header className="bg-white shadow-md sticky top-0 z-10 overflow-hidden">
+      <img
+        src={imageUrl}
+        alt="Header"
+        className="w-full h-24 sm:h-32 object-cover"
+      />
     </header>
   );
 }
