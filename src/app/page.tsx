@@ -1,4 +1,3 @@
-import PdfThumbnail from '@/components/PdfThumbnail';
 import Header from '@/components/Header';
 
 interface Folheto {
@@ -38,11 +37,26 @@ function FolhetoCard({ folheto }: { folheto: Folheto }) {
       rel="noopener noreferrer"
       className="group block bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100"
     >
-      <div className="aspect-[2/3] relative overflow-hidden">
+      <div className="aspect-[2/3] relative overflow-hidden bg-gradient-to-br from-red-50 to-orange-50">
         {folheto.thumbnail ? (
           <img src={folheto.thumbnail} alt={folheto.titulo} className="w-full h-full object-cover" />
         ) : (
-          <PdfThumbnail url={folheto.url} className="w-full h-full" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <svg
+              className="w-10 h-10 text-red-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            <span className="text-xs font-medium text-red-400 uppercase mt-1">PDF</span>
+          </div>
         )}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4 pt-8">
           <span className="text-xs font-medium text-white/90 uppercase tracking-wider bg-red-600 px-2 py-1 rounded">
