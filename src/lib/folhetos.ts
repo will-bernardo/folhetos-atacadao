@@ -4,6 +4,13 @@ import jsonfile from 'jsonfile';
 import type { Folheto, FolhetoList } from '@/types';
 
 const DATA_PATH = path.join(process.cwd(), 'data', 'folhetos.json');
+const CONFIG_PATH = path.join(process.cwd(), 'data', 'config.json');
+
+export interface Config {
+  header: {
+    imagem: string;
+  };
+}
 
 export function getFolhetos(): Folheto[] {
   try {
@@ -50,4 +57,24 @@ export function deleteFolheto(id: string): boolean {
   
   saveFolhetos(filtered);
   return true;
+}
+
+export function getConfig(): Config {
+  try {
+    return jsonfile.readFileSync(CONFIG_PATH) as Config;
+  } catch {
+    return { header: { imagem: '' } };
+  }
+}
+
+export function updateConfig(updates: Partial<Config>): Config {
+  const dataDir = path.join(process.cwd(), 'data');
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+  }
+  
+  const current = getConfig();
+  const updated = { ...current, ...updates };
+  jsonfile.writeFileSync(CONFIG_PATH, updated, { spaces: 2 });
+  return updated;
 }

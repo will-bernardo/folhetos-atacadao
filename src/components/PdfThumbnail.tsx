@@ -43,7 +43,6 @@ export default function PdfThumbnail({ url, className = '' }: PdfThumbnailProps)
         await page.render({
           canvasContext: context,
           viewport,
-          canvas,
         }).promise;
 
         if (!cancelled) setHasThumbnail(true);
