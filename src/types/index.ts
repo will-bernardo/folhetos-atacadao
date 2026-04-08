@@ -2,6 +2,7 @@ export interface Folheto {
   id: string;
   titulo: string;
   url: string;
+  thumbnail?: string;
   data: string;
 }
 

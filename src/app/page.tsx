@@ -5,6 +5,7 @@ interface Folheto {
   id: string;
   titulo: string;
   url: string;
+  thumbnail?: string;
   data: string;
 }
 
@@ -38,7 +39,11 @@ function FolhetoCard({ folheto }: { folheto: Folheto }) {
       className="group block bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100"
     >
       <div className="aspect-[2/3] relative overflow-hidden">
-        <PdfThumbnail url={folheto.url} className="w-full h-full" />
+        {folheto.thumbnail ? (
+          <img src={folheto.thumbnail} alt={folheto.titulo} className="w-full h-full object-cover" />
+        ) : (
+          <PdfThumbnail url={folheto.url} className="w-full h-full" />
+        )}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4 pt-8">
           <span className="text-xs font-medium text-white/90 uppercase tracking-wider bg-red-600 px-2 py-1 rounded">
             PDF

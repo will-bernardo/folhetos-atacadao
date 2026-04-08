@@ -7,6 +7,7 @@ interface Folheto {
   id: string;
   titulo: string;
   url: string;
+  thumbnail?: string;
   data: string;
 }
 
@@ -16,7 +17,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ titulo: '', url: '', data: '' });
+  const [formData, setFormData] = useState({ titulo: '', url: '', thumbnail: '', data: '' });
   const [saving, setSaving] = useState(false);
   const [headerImage, setHeaderImage] = useState('');
   const [activeTab, setActiveTab] = useState<'folhetos' | 'config'>('folhetos');
@@ -80,7 +81,7 @@ export default function DashboardPage() {
         if (!res.ok) throw new Error('Erro ao criar');
       }
 
-      setFormData({ titulo: '', url: '', data: '' });
+      setFormData({ titulo: '', url: '', thumbnail: '', data: '' });
       setShowForm(false);
       setEditingId(null);
       fetchFolhetos();
@@ -92,7 +93,7 @@ export default function DashboardPage() {
   };
 
   const handleEdit = (folheto: Folheto) => {
-    setFormData({ titulo: folheto.titulo, url: folheto.url, data: folheto.data });
+    setFormData({ titulo: folheto.titulo, url: folheto.url, thumbnail: folheto.thumbnail || '', data: folheto.data });
     setEditingId(folheto.id);
     setShowForm(true);
   };
@@ -113,7 +114,7 @@ export default function DashboardPage() {
   };
 
   const cancelForm = () => {
-    setFormData({ titulo: '', url: '', data: '' });
+    setFormData({ titulo: '', url: '', thumbnail: '', data: '' });
     setShowForm(false);
     setEditingId(null);
   };
@@ -249,6 +250,17 @@ export default function DashboardPage() {
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
                       placeholder="https://..."
                     />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">URL da Thumbnail (opcional)</label>
+                    <input
+                      type="url"
+                      value={formData.thumbnail}
+                      onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+                      placeholder="https://.../thumbnail.jpg"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Imagem personalizada para o card. Se vazio, usa miniatura do PDF.</p>
                   </div>
                   <div className="flex gap-3 pt-2">
                     <button
