@@ -72,7 +72,7 @@ export default async function Home() {
       
       <section className="flex-1 container mx-auto px-4 py-8">
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-800">Ofertas da Semana</h2>
+          <h2 className="text-2xl font-bold text-gray-800">Ofertas do dia A</h2>
           <p className="text-gray-500 mt-1">Clique para baixar e conferir as promoções</p>
         </div>
 

@@ -49,12 +49,11 @@ export default async function Header() {
   }
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-10 overflow-hidden">
+    <header className="bg-white shadow-md sticky top-0 z-10">
       <img
         src={imageUrl}
         alt="Header"
-        className="w-full h-auto object-contain"
-        style={{ aspectRatio: '4/1' }}
+        className="w-full h-auto"
       />
     </header>
   );
