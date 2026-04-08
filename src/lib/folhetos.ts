@@ -5,6 +5,7 @@ import type { Folheto, FolhetoList } from '@/types';
 
 const DATA_PATH = path.join(process.cwd(), 'data', 'folhetos.json');
 const CONFIG_PATH = path.join(process.cwd(), 'data', 'config.json');
+const PUBLIC_FOLHETOS_PATH = path.join(process.cwd(), 'public', 'folhetos.json');
 
 export interface Config {
   header: {
@@ -14,6 +15,10 @@ export interface Config {
 
 export function getFolhetos(): Folheto[] {
   try {
+    if (fs.existsSync(PUBLIC_FOLHETOS_PATH)) {
+      const data = jsonfile.readFileSync(PUBLIC_FOLHETOS_PATH) as FolhetoList;
+      return data.folhetos || [];
+    }
     const data = jsonfile.readFileSync(DATA_PATH) as FolhetoList;
     return data.folhetos || [];
   } catch {
@@ -27,6 +32,7 @@ export function saveFolhetos(folhetos: Folheto[]): void {
     fs.mkdirSync(dataDir, { recursive: true });
   }
   jsonfile.writeFileSync(DATA_PATH, { folhetos }, { spaces: 2 });
+  jsonfile.writeFileSync(PUBLIC_FOLHETOS_PATH, { folhetos }, { spaces: 2 });
 }
 
 export function addFolheto(folheto: Omit<Folheto, 'id'>): Folheto {
