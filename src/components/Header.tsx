@@ -53,7 +53,8 @@ export default async function Header() {
       <img
         src={imageUrl}
         alt="Header"
-        className="w-full h-24 sm:h-32 object-cover"
+        className="w-full h-auto object-contain"
+        style={{ aspectRatio: '4/1' }}
       />
     </header>
   );
