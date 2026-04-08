@@ -27,11 +27,11 @@ export default function Header({ defaultImage = '' }: HeaderProps) {
 
   if (imageUrl) {
     return (
-      <header className="bg-white shadow-md sticky top-0 z-10">
+      <header className="bg-white shadow-md sticky top-0 z-10 overflow-hidden">
         <img
           src={imageUrl}
           alt="Header"
-          className="w-full h-16 sm:h-20 object-contain"
+          className="w-full h-24 sm:h-32 object-cover"
         />
       </header>
     );
