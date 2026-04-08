@@ -1,65 +1,138 @@
-import Image from "next/image";
+import PdfThumbnail from '@/components/PdfThumbnail';
 
-export default function Home() {
+function Header() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <header className="bg-red-600 text-white shadow-lg sticky top-0 z-10">
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-center gap-3">
+          <div className="bg-white rounded-full p-2">
+            <svg
+              className="w-8 h-8 text-red-600"
+              fill="currentColor"
+              viewBox="0 0 24 24"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              <path d="M19 7V4H5v3H2v13h3v3h14v-3h3V7h-3zm-9 11H7v-5h3v5zm5-8h-2V6h2v4zm0 5h-2v-2h2v2z" />
+            </svg>
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Atacadão</h1>
+            <p className="text-xs text-red-100">Folhetos de Ofertas</p>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+interface Folheto {
+  id: string;
+  titulo: string;
+  url: string;
+  data: string;
+}
+
+async function getFolhetos(): Promise<Folheto[]> {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/folhetos`, {
+      cache: 'no-store',
+    });
+    if (!res.ok) return [];
+    return res.json();
+  } catch {
+    return [];
+  }
+}
+
+function FolhetoCard({ folheto }: { folheto: Folheto }) {
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    });
+  };
+
+  return (
+    <a
+      href={folheto.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group block bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100"
+    >
+      <div className="aspect-[3/4] relative overflow-hidden">
+        <PdfThumbnail url={folheto.url} className="w-full h-full" />
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4 pt-8">
+          <span className="text-xs font-medium text-white/90 uppercase tracking-wider bg-red-600 px-2 py-1 rounded">
+            PDF
+          </span>
+        </div>
+      </div>
+      <div className="p-4">
+        <h3 className="font-semibold text-gray-800 group-hover:text-red-600 transition-colors line-clamp-2">
+          {folheto.titulo}
+        </h3>
+        <p className="text-sm text-gray-500 mt-1">
+          {formatDate(folheto.data)}
+        </p>
+        <div className="mt-3 flex items-center justify-center gap-2 bg-red-50 text-red-600 py-2 px-4 rounded-lg font-medium text-sm group-hover:bg-red-600 group-hover:text-white transition-colors">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          Baixar PDF
+        </div>
+      </div>
+    </a>
+  );
+}
+
+export default async function Home() {
+  const folhetos = await getFolhetos();
+
+  return (
+    <main className="min-h-screen flex flex-col">
+      <Header />
+      
+      <section className="flex-1 container mx-auto px-4 py-8">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold text-gray-800">Ofertas da Semana</h2>
+          <p className="text-gray-500 mt-1">Clique para baixar e conferir as promoções</p>
+        </div>
+
+        {folhetos.length === 0 ? (
+          <div className="text-center py-16">
+            <svg
+              className="w-16 h-16 mx-auto text-gray-300 mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              Learning
-            </a>{" "}
-            center.
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            <p className="text-gray-500">Nenhum folheto disponível no momento.</p>
+            <p className="text-gray-400 text-sm mt-1">Volte em breve!</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {folhetos.map((folheto) => (
+              <FolhetoCard key={folheto.id} folheto={folheto} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      <footer className="bg-gray-100 border-t border-gray-200 py-6 mt-auto">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-gray-500 text-sm">
+            © {new Date().getFullYear()} Atacadão. Todos os direitos reservados.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </footer>
+    </main>
   );
 }
