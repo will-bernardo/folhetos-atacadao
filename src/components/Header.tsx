@@ -31,7 +31,7 @@ export default function Header({ defaultImage = '' }: HeaderProps) {
         <img
           src={imageUrl}
           alt="Header"
-          className="w-full h-auto object-contain"
+          className="w-full h-16 sm:h-20 object-contain"
         />
       </header>
     );
