@@ -1,4 +1,5 @@
 import Header from '@/components/Header';
+import { folhetos } from '@/lib/data';
 
 interface Folheto {
   id: string;
@@ -6,18 +7,6 @@ interface Folheto {
   url: string;
   thumbnail?: string;
   data: string;
-}
-
-async function getFolhetos(): Promise<Folheto[]> {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/folhetos`, {
-      cache: 'no-store',
-    });
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
-  }
 }
 
 function FolhetoCard({ folheto }: { folheto: Folheto }) {
@@ -82,9 +71,7 @@ function FolhetoCard({ folheto }: { folheto: Folheto }) {
   );
 }
 
-export default async function Home() {
-  const folhetos = await getFolhetos();
-
+export default function Home() {
   return (
     <main className="min-h-screen flex flex-col">
       <Header />

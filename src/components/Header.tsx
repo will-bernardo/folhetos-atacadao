@@ -1,8 +1,4 @@
-interface HeaderConfig {
-  header: {
-    imagem: string;
-  };
-}
+import { config } from '@/lib/data';
 
 function HeaderDefault() {
   return (
@@ -28,20 +24,7 @@ function HeaderDefault() {
   );
 }
 
-async function getHeaderConfig(): Promise<HeaderConfig> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/config.json`, { cache: 'no-store' });
-    if (res.ok) {
-      return res.json();
-    }
-  } catch {
-  }
-  return { header: { imagem: '' } };
-}
-
-export default async function Header() {
-  const config = await getHeaderConfig();
+export default function Header() {
   const imageUrl = config.header?.imagem;
 
   if (!imageUrl) {
