@@ -60,7 +60,7 @@ function FolhetoCard({ folheto }: { folheto: Folheto }) {
       rel="noopener noreferrer"
       className="group block bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100"
     >
-      <div className="aspect-[3/4] relative overflow-hidden">
+      <div className="aspect-[2/3] relative overflow-hidden">
         <PdfThumbnail url={folheto.url} className="w-full h-full" />
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4 pt-8">
           <span className="text-xs font-medium text-white/90 uppercase tracking-wider bg-red-600 px-2 py-1 rounded">
@@ -68,15 +68,15 @@ function FolhetoCard({ folheto }: { folheto: Folheto }) {
           </span>
         </div>
       </div>
-      <div className="p-4">
-        <h3 className="font-semibold text-gray-800 group-hover:text-red-600 transition-colors line-clamp-2">
+      <div className="p-3">
+        <h3 className="font-semibold text-gray-800 group-hover:text-red-600 transition-colors line-clamp-2 text-sm">
           {folheto.titulo}
         </h3>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-xs text-gray-500 mt-1">
           {formatDate(folheto.data)}
         </p>
-        <div className="mt-3 flex items-center justify-center gap-2 bg-red-50 text-red-600 py-2 px-4 rounded-lg font-medium text-sm group-hover:bg-red-600 group-hover:text-white transition-colors">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="mt-2 flex items-center justify-center gap-1 bg-red-50 text-red-600 py-1.5 px-3 rounded-lg font-medium text-xs group-hover:bg-red-600 group-hover:text-white transition-colors">
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
           </svg>
           Baixar PDF
@@ -118,7 +118,7 @@ export default async function Home() {
             <p className="text-gray-400 text-sm mt-1">Volte em breve!</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {folhetos.map((folheto) => (
               <FolhetoCard key={folheto.id} folheto={folheto} />
             ))}
