@@ -12,8 +12,7 @@ interface PdfThumbnailProps {
 
 export default function PdfThumbnail({ url, className = '' }: PdfThumbnailProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [hasThumbnail, setHasThumbnail] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -21,10 +20,9 @@ export default function PdfThumbnail({ url, className = '' }: PdfThumbnailProps)
     async function renderThumbnail() {
       try {
         const response = await fetch(url);
-        if (!response.ok) throw new Error('Failed to fetch PDF');
+        if (!response.ok) return;
         
         const arrayBuffer = await response.arrayBuffer();
-        
         if (cancelled) return;
 
         const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -48,12 +46,8 @@ export default function PdfThumbnail({ url, className = '' }: PdfThumbnailProps)
           canvas,
         }).promise;
 
-        if (!cancelled) setLoading(false);
+        if (!cancelled) setHasThumbnail(true);
       } catch {
-        if (!cancelled) {
-          setError(true);
-          setLoading(false);
-        }
       }
     }
 
@@ -64,12 +58,16 @@ export default function PdfThumbnail({ url, className = '' }: PdfThumbnailProps)
     };
   }, [url]);
 
-  if (error) {
-    return (
-      <div className={`bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center ${className}`}>
-        <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
+  return (
+    <div className={`bg-gradient-to-br from-red-50 to-orange-50 relative ${className}`}>
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      {!hasThumbnail && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
           <svg
-            className="w-12 h-12 mx-auto mb-2 text-red-400"
+            className="w-10 h-10 text-red-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -81,26 +79,9 @@ export default function PdfThumbnail({ url, className = '' }: PdfThumbnailProps)
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          <span className="text-xs font-medium text-red-400 uppercase">PDF</span>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className={`bg-gradient-to-br from-red-50 to-orange-50 relative ${className}`}>
-      {loading && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="bg-white rounded-xl shadow-lg p-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto" />
-          </div>
+          <span className="text-xs font-medium text-red-400 uppercase mt-1">PDF</span>
         </div>
       )}
-      <canvas
-        ref={canvasRef}
-        className={`w-full h-full object-cover ${loading ? 'opacity-0' : 'opacity-100'}`}
-        style={{ display: loading ? 'none' : 'block' }}
-      />
     </div>
   );
 }
