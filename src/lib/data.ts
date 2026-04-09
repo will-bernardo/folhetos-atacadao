@@ -38,6 +38,6 @@ export const folhetos: Folheto[] = [
 
 export const config: Config = {
   header: {
-    imagem: 'https://pub-218438f0586c4a8a9d966a4295cde53e.r2.dev/header2.png'
+    imagem: 'https://pub-218438f0586c4a8a9d966a4295cde53e.r2.dev/header3.png'
   }
 };
